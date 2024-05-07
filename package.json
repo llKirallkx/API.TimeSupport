@@ -3,12 +3,16 @@
         "node": "18"
     },
     "scripts": {
-
+        "start": "node index.js",
+        "startProd": "npm i && node index.js"
     },
     "dependencies": {
         "body-parser": "^1.20.2",
+        "dotenv": "^16.4.5",
         "express": "^4.18.2",
         "filereader": "^0.10.3",
+        "mongodb": "^6.6.1",
+        "mongoose": "^8.3.4",
         "strip-ansi": "^5.0.0"
     }
 }

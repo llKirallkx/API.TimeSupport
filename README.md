@@ -19,8 +19,12 @@ node index.js
 
 # Servidor
 
-O backend em node está sendo rodado pelo Render
+## O backend em node está sendo rodado pelo Render
 
 Endpoint
 [https://afd-generator.onrender.com](https://afd-generator.onrender.com)
 
+## Banco de dados está hospedado pelo mongoDBAltas na AWS
+
+ConnectionString
+`mongodb+srv://${dbUser}:${dbPassword}@cluster0.hos1qwb.mongodb.net/AFD-Generate`

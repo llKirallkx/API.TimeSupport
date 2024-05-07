@@ -1,7 +1,29 @@
 const fs = require('fs');
 const { throws, rejects } = require('assert');
-const prompt = require('prompt-sync')({sigint: true});
+require("dotenv").config()
+const { MongoMissingCredentialsError } = require("mongodb");
+const mongoose = require("mongoose")
 
+
+// Connection do banco de dados
+const dbUser = process.env.DB_USER;
+const dbPassword = process.env.DB_PASS;
+
+const connect = () => {
+    mongoose.connect(`mongodb+srv://${dbUser}:${dbPassword}@cluster0.hos1qwb.mongodb.net/AFD-Generate`)
+
+    const connection = mongoose.connection;
+
+    connection.on("error", () => {
+        console.log("Erro ao conectar com o mongoDB")
+    })
+
+    connection.on("open", () => {
+        console.log("Conectado ao MongoDB com sucesso")
+    })
+}
+
+connect();
 
 
 // default
@@ -26,7 +48,7 @@ const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({ extended: false }));
 
 
-app.listen(3000, () => {
+app.listen(10000, () => {
     console.log('API Iniciada');
   });
 
