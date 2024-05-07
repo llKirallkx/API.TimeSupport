@@ -10,7 +10,8 @@ const dbUser = process.env.DB_USER;
 const dbPassword = process.env.DB_PASS;
 
 const connect = () => {
-    mongoose.connect(`mongodb+srv://${dbUser}:${dbPassword}@cluster0.hos1qwb.mongodb.net/AFD-Generate`)
+    // mongoose.connect(`mongodb+srv://${dbUser}:${dbPassword}@cluster0.hos1qwb.mongodb.net/AFD-Generate`)
+    mongoose.connect(`mongodb+srv://tiagofelipefe:UHoTnSFuD7JBohZF@cluster0.hos1qwb.mongodb.net/AFD-Generate`)
 
     const connection = mongoose.connection;
 

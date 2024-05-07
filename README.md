@@ -13,9 +13,8 @@ Usado o ExpressJS para rodar o servidor.
 
 ```
 npm i
-node index.js
-
-``` 
+npm start
+```
 
 # Servidor
 
