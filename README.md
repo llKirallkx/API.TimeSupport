@@ -16,3 +16,10 @@ npm i
 node index.js
 
 ``` 
+
+# Servidor
+
+O backend em node está sendo rodado pelo Render
+
+[https://afd-generator.onrender.com](https://afd-generator.onrender.com)
+

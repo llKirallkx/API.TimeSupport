@@ -1,13 +1,17 @@
 const fs = require('fs');
 const { throws, rejects } = require('assert');
-const { Console } = require('console');
 const prompt = require('prompt-sync')({sigint: true});
 
 
 
 // default
+
+//Implementar banco de dados
 let nsr = parseInt(fs.readFileSync('nsr.txt', {encoding:'utf-8'}));
+
 const tipo = 3;
+
+//Ajustar novo cabeçalho
 const cabecalho = '0000000001191706623000130000000000000PONTOFOPAG EMPRESA DA IMPLANTAÇÃO EPAYS                                                                                                               000917066230001302001202317022023200220231844';
 
 
