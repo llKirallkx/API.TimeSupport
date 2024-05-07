@@ -21,5 +21,6 @@ node index.js
 
 O backend em node está sendo rodado pelo Render
 
+Endpoint
 [https://afd-generator.onrender.com](https://afd-generator.onrender.com)
 
