@@ -1,1 +1,18 @@
 # Projeto-integrador
+
+
+Programa feito para entrega do projeto integrador do curso de Análise e desenvolvimento de Sistemas na Uni Dom Bosco.
+
+# AFD
+
+O AFD é um arquivo fiscal para registro eletronico de ponto, sua criação se fez pela necessidadae de padronizar os arquivos para uma fiscalização do ministério do trabalho, e homologação padrão de equipamentos.
+
+# Como rodar a aplicação
+
+Usado o ExpressJS para rodar o servidor.
+
+```
+npm i
+node index.js
+
+``` 

@@ -1,0 +1,16 @@
+{
+    "engines": {
+        "node": "18"
+    },
+    "scripts": {
+
+    },
+    "dependencies": {
+        "body-parser": "^1.20.2",
+        "express": "^4.18.2",
+        "filereader": "^0.10.3",
+        "nodemailer": "^6.9.1",
+        "prompt-sync": "^4.2.0",
+        "strip-ansi": "^5.0.0"
+    }
+}
