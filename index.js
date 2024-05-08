@@ -2,29 +2,10 @@ const fs = require('fs');
 const { throws, rejects } = require('assert');
 require("dotenv").config()
 const { MongoMissingCredentialsError } = require("mongodb");
-const mongoose = require("mongoose")
 
 
 // Connection do banco de dados
-const dbUser = process.env.DB_USER;
-const dbPassword = process.env.DB_PASS;
 
-const connect = () => {
-    // mongoose.connect(`mongodb+srv://${dbUser}:${dbPassword}@cluster0.hos1qwb.mongodb.net/AFD-Generate`)
-    mongoose.connect(`mongodb+srv://tiagofelipefe:UHoTnSFuD7JBohZF@cluster0.hos1qwb.mongodb.net/AFD-Generate`)
-
-    const connection = mongoose.connection;
-
-    connection.on("error", () => {
-        console.log("Erro ao conectar com o mongoDB")
-    })
-
-    connection.on("open", () => {
-        console.log("Conectado ao MongoDB com sucesso")
-    })
-}
-
-connect();
 
 
 // default
@@ -53,10 +34,14 @@ app.listen(10000, () => {
     console.log('API Iniciada');
   });
 
+require("./database/connection");
+const db = require("./models");
+
 // Rota para processar o formulário
-app.post('/download', (req, res) => {
+app.post('/download', async (req, res) => {
     console.log('Api chamada');
     
+    const Afd = db.afds;
 
     let trabalhadores = req.body.content.split('\n');
     let numTrab = trabalhadores.length;
@@ -80,7 +65,6 @@ app.post('/download', (req, res) => {
         return mes.toString().padStart(2, "0")
     }
 
-    
     fs.writeFileSync('Afd-GeneretorAFD.txt', cabecalho);
     console.log('arquivo criado');
     
@@ -134,18 +118,25 @@ app.post('/download', (req, res) => {
     
         let initDate = event.setDate(recieveEvent);
     }
+
+    let lastNSR = new Afd ({ "nsr": nsr })
+    await lastNSR.save();
     
-    fs.writeFileSync('nsr.txt', `${nsr}`, (err) => {
-        if (err){
-            throw err;
-        }
+    
+    // fs.writeFileSync('nsr.txt', `${nsr}`, (err) => {
+    //     if (err){
+    //         throw err;
+    //     }
+    // });
+
+
+    // Enviar o arquivo recém-criado como resposta de download
+    res.download('Afd-GeneretorAFD.txt', 'Afd-GeneretorAFD.txt', err => {
+        if (err) {
+        console.error(err);
+        res.status(500).send('Erro ao enviar arquivo');
+    }else{
+        console.log("Arquivo enviado para o front")
+    }
     });
-
-
-        // Enviar o arquivo recém-criado como resposta de download
-        res.download('Afd-GeneretorAFD.txt', 'Afd-GeneretorAFD.txt', err => {
-          if (err) {
-            console.error(err);
-            res.status(500).send('Erro ao enviar arquivo');
-          }});
 });
