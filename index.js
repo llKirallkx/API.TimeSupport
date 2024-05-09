@@ -2,16 +2,20 @@ const fs = require('fs');
 const { throws, rejects } = require('assert');
 require("dotenv").config()
 const { MongoMissingCredentialsError } = require("mongodb");
-
-
-// Connection do banco de dados
-
-
+const ObjectId = require('mongoose').Types.ObjectId;
 
 // default
 
 //Implementar banco de dados
-let nsr = parseInt(fs.readFileSync('nsr.txt', {encoding:'utf-8'}));
+// let nsr = parseInt(fs.readFileSync('nsr.txt', {encoding:'utf-8'}));
+
+async function Nsr(Afd){
+    
+    let nsr = await Afd.findOne({});
+    
+    return nsr
+}
+
 
 const tipo = 3;
 
@@ -36,12 +40,16 @@ app.listen(10000, () => {
 
 require("./database/connection");
 const db = require("./models");
+const afdModel = require('./models/afd.model');
 
 // Rota para processar o formulário
 app.post('/download', async (req, res) => {
     console.log('Api chamada');
     
     const Afd = db.afds;
+    let nsrBanco = await Nsr(Afd);
+    let nsr = nsrBanco.nsr;
+    let nsrID = nsrBanco._id;
 
     let trabalhadores = req.body.content.split('\n');
     let numTrab = trabalhadores.length;
@@ -119,17 +127,20 @@ app.post('/download', async (req, res) => {
         let initDate = event.setDate(recieveEvent);
     }
 
-    let lastNSR = new Afd ({ "nsr": nsr })
-    await lastNSR.save();
+    nsrBanco.nsr = nsr;
+    await nsrBanco
+        .save()
+        .then(resultado => {
+
+        console.log("NSR Atualizado no banco");
+
+    }).catch(erro => {
+
+        console.error(erro); // Exibe qualquer erro que ocorrer durante a atualização
+
+    });
     
     
-    // fs.writeFileSync('nsr.txt', `${nsr}`, (err) => {
-    //     if (err){
-    //         throw err;
-    //     }
-    // });
-
-
     // Enviar o arquivo recém-criado como resposta de download
     res.download('Afd-GeneretorAFD.txt', 'Afd-GeneretorAFD.txt', err => {
         if (err) {
