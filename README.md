@@ -7,6 +7,9 @@ Programa feito para entrega do projeto integrador do curso de Análise e desenvo
 
 O AFD é um arquivo fiscal para registro eletronico de ponto, sua criação se fez pela necessidadae de padronizar os arquivos para uma fiscalização do ministério do trabalho, e homologação padrão de equipamentos.
 
+## Numero REP
+99999999999999999
+
 # Como rodar a aplicação
 
 Usado o ExpressJS para rodar o servidor.
@@ -27,3 +30,7 @@ Endpoint
 
 ConnectionString
 `mongodb+srv://${dbUser}:${dbPassword}@cluster0.hos1qwb.mongodb.net/AFD-Generate`
+
+# Referências
+
+[https://in.gov.br/en/web/dou/-/portaria-359094139](Portaria 671/21 MTP)
