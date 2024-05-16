@@ -137,7 +137,7 @@ app.post('/download', async (req, res) => {
     const yearSet = event.getFullYear();
 
     let horarios = [entrada1, saida1 ,entrada2, saida2];
-    const hoje = timeZoneAjust.toISOString();
+    const hoje = timeZoneAjust().toISOString();
 
     const cabecalho = `0000000001${tipoDeIdentificador}${cnpjOuCpf}              ${razaosocial}99999999999999999${recieveEvent}${finaleventCabecalho}${hoje}003146100098000150                                  `;
 
