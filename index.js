@@ -84,6 +84,26 @@ function calcularCRC16Modbus(data) {
     return crcHex;
 }
 
+function timeZoneAjust(date){
+    
+    if(date === null || date === undefined){
+        var dateNow = new Date();
+    } else {
+        var dateNow = new Date(date);
+    }
+    
+    if(dateNow.getTimezoneOffset() === 0){
+        dateNow.addHours(-3)
+    }
+    
+    
+    return dateNow
+}
+
+Date.prototype.addHours = function (value) {
+    this.setHours(this.getHours() + value);
+}
+
 // Rota para processar o formulário
 app.post('/download', async (req, res) => {
     console.log('Api chamada');
@@ -110,14 +130,14 @@ app.post('/download', async (req, res) => {
     let entrada2 = req.body.entrada2;
     let saida2 = req.body.saida2;
     let recieveEvent = req.body.event;
-    const event = new Date(recieveEvent);
+    const event = timeZoneAjust(recieveEvent);
     const finaleventCabecalho = req.body.finalevent;
     const recieveFinalEvent = new Date(req.body.finalevent)
     const finalevent = recieveFinalEvent.setDate(recieveFinalEvent.getDate() + 1);
     const yearSet = event.getFullYear();
 
     let horarios = [entrada1, saida1 ,entrada2, saida2];
-    const hoje = new Date().toISOString();
+    const hoje = timeZoneAjust.toISOString();
 
     const cabecalho = `0000000001${tipoDeIdentificador}${cnpjOuCpf}              ${razaosocial}99999999999999999${recieveEvent}${finaleventCabecalho}${hoje}003146100098000150                                  `;
 
