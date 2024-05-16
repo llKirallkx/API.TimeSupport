@@ -3,7 +3,6 @@ const { throws, rejects } = require('assert');
 require("dotenv").config()
 const { MongoMissingCredentialsError } = require("mongodb");
 const ObjectId = require('mongoose').Types.ObjectId;
-const moment = require('moment-timezone');
 
 // default
 
@@ -111,7 +110,7 @@ app.post('/download', async (req, res) => {
     let entrada2 = req.body.entrada2;
     let saida2 = req.body.saida2;
     let recieveEvent = req.body.event;
-    const event = moment.tz(recieveEvent, 'YYYY-MM-DD', 'America/Sao_Paulo');
+    const event = new Date(recieveEvent);
     const finaleventCabecalho = req.body.finalevent;
     const recieveFinalEvent = new Date(req.body.finalevent)
     const finalevent = recieveFinalEvent.setDate(recieveFinalEvent.getDate() + 1);
