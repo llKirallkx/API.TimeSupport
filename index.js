@@ -288,7 +288,7 @@ app.post('/download1510', async (req, res) => {
                     // Poratira 671
                     // let registro = `${nNsr}${tipo}${yearSet}-${nMes}-${nDia}T${batida}:00-0300${cpf}`;
                     let crcCalculado = calcularCRC16Modbus(registro);
-                    fs.appendFileSync('Afd-GeneretorAFD.txt', `\n${registro}${crcCalculado}`);
+                    fs.appendFileSync('Afd-GeneretorAFD.txt', `\n${crcCalculado}`);
                     
                     nsr++;
                     contador++;
