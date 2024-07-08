@@ -178,7 +178,7 @@ app.post('/download671', async (req, res) => {
                     // Poratira 671
                     let registro = `${nNsr}${tipo}${yearSet}-${nMes}-${nDia}T${batida}:00-0300${cpf}`;
                     let crcCalculado = calcularCRC16Modbus(registro);
-                    fs.appendFileSync('Afd-GeneretorAFD.txt', `\n${registro}${crcCalculado}`);
+                    fs.appendFileSync('Afd-GeneretorAFD.txt', `\n${crcCalculado}`);
                     
                     nsr++;
                     contador++;
@@ -240,10 +240,10 @@ app.post('/download1510', async (req, res) => {
         console.error(error.message);
     }
 
-    let entrada1 = req.body.entrada1;
-    let saida1 = req.body.saida1;
-    let entrada2 = req.body.entrada2;
-    let saida2 = req.body.saida2;
+    let entrada1 = req.body.entrada1.replace(/:/g, '');
+    let saida1 = req.body.saida1.replace(/:/g, '');
+    let entrada2 = req.body.entrada2.replace(/:/g, '');
+    let saida2 = req.body.saida2.replace(/:/g, '');
     let recieveEvent = req.body.event;
     const event = timeZoneAjust(recieveEvent);
     const finaleventCabecalho = req.body.finalevent;
