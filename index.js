@@ -16,6 +16,7 @@ const tipo = 3;
 
 const express = require('express');
 const app = express();
+app.use(cors());
 const bodyParser = require('body-parser');
 
 // Middleware para analisar os dados do formulário
@@ -108,8 +109,8 @@ Date.prototype.addHours = function (value) {
     this.setHours(this.getHours() + value);
 }
 
-// Rota para processar o formulário
-app.post('/download', async (req, res) => {
+// Rota para processar o formulário 671
+app.post('/download671', async (req, res) => {
     console.log('Api chamada');
     
     const Afd = db.afds;
@@ -219,6 +220,115 @@ app.post('/download', async (req, res) => {
     });
 });
 
+app.post('/download1510', async (req, res) => {
+    console.log('Api chamada');
+    
+    const Afd = db.afds;
+    let nsrBanco = await Nsr(Afd);
+    let nsr = nsrBanco.nsr;
+
+    let trabalhadores = req.body.content.split('\n');
+    let numTrab = trabalhadores.length;
+
+    const tipoDeIdentificador = req.body.tipoDeIdentificador; // 1 CNPJ - 2 CPF
+    const cnpjOuCpf = req.body.cnpjOuCpf;
+    let reqRazaoSocial = req.body.razaoSocial;
+
+    try {
+        var razaosocial = formatarRazaoSocial(reqRazaoSocial);
+    } catch (error) {
+        console.error(error.message);
+    }
+
+    let entrada1 = req.body.entrada1;
+    let saida1 = req.body.saida1;
+    let entrada2 = req.body.entrada2;
+    let saida2 = req.body.saida2;
+    let recieveEvent = req.body.event;
+    const event = timeZoneAjust(recieveEvent);
+    const finaleventCabecalho = req.body.finalevent;
+    const recieveFinalEvent = new Date(req.body.finalevent)
+    const finalevent = recieveFinalEvent.setDate(recieveFinalEvent.getDate() + 1);
+    const yearSet = event.getFullYear();
+
+    let horarios = [entrada1, saida1 ,entrada2, saida2];
+    const hoje = timeZoneAjust().toISOString();
+
+    const cabecalho = `0000000001${tipoDeIdentificador}${cnpjOuCpf}              ${razaosocial}99999999999999999${recieveEvent}${finaleventCabecalho}${hoje}003146100098000150                                  `;
+
+    fs.writeFileSync('Afd-GeneretorAFD.txt', cabecalho);
+    console.log('arquivo criado');
+    
+
+    for (const trab of trabalhadores){
+        let countTrabs = 0;
+        let cpf = trabalhadores[countTrabs];
+    
+        event.setDate(event.getDate() + 1);
+        while(finalevent >= event) {
+            
+
+            if (event.getDay() === 0 || event.getDay() === 6 ) {
+                event.setDate(event.getDate() + 1);
+            } else {
+                      
+                let mesGet = event.getMonth();
+                const nMes = fillMes(mesGet + 1); // mes do bilhete
+                const nDia = fillDate(event.getDate()); // data do bilhete
+                let contador = 0;
+            
+                for(const batidas of horarios){ 
+            
+                    const batida = horarios[contador];
+                    const nNsr = fillNum(nsr); // NSR do bilhete
+                    
+                    // Portaria 1510
+                    let registro = `${nNsr}${tipo}${nDia}${nMes}${yearSet}${batida}${cpf}`;
+
+                    // Poratira 671
+                    // let registro = `${nNsr}${tipo}${yearSet}-${nMes}-${nDia}T${batida}:00-0300${cpf}`;
+                    let crcCalculado = calcularCRC16Modbus(registro);
+                    fs.appendFileSync('Afd-GeneretorAFD.txt', `\n${registro}${crcCalculado}`);
+                    
+                    nsr++;
+                    contador++;
+                }
+                
+                event.setDate(event.getDate() + 1);
+
+            }
+
+            
+        }
+    
+    
+        let initDate = event.setDate(recieveEvent);
+    }
+
+    nsrBanco.nsr = nsr;
+    await nsrBanco
+        .save()
+        .then(resultado => {
+
+        console.log("NSR Atualizado no banco");
+
+    }).catch(erro => {
+
+        console.error(erro);
+
+    });
+    
+    
+    // Enviar o arquivo recém-criado como resposta de download
+    res.download('Afd-GeneretorAFD.txt', 'Afd-GeneretorAFD.txt', err => {
+        if (err) {
+        console.error(err);
+        res.status(500).send('Erro ao enviar arquivo');
+    }else{
+        console.log("Arquivo enviado para o front")
+    }
+    });
+});
 
 // Functions crc 16
 
