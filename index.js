@@ -12,6 +12,11 @@ const cors = require('cors');
 
 const tipo = 3;
 
+// imports
+
+const collectNsr = require("./controllers/afd.controller/afd.controller");
+
+
 // Express server API
 
 const express = require('express');
@@ -49,7 +54,7 @@ function fillDate(dates){
 
 // ajusta o nsr com os 00 na frente
 function fillNum(nsrs){
-    return nsrs.toString().padStart(9, "0")
+  return nsrs.toString().padStart(9, "0")
 }
 
 function formatarRazaoSocial(str) {
@@ -103,6 +108,14 @@ function timeZoneAjust(date){
     
     
     return dateNow
+}
+
+function formatDate(date) {
+  const day = String(date.getDate()).padStart(2, '0'); // Obtém o dia e adiciona zero à esquerda, se necessário
+  const month = String(date.getMonth() + 1).padStart(2, '0'); // Obtém o mês (adicionando 1, pois getMonth() retorna de 0 a 11) e adiciona zero à esquerda, se necessário
+  const year = date.getFullYear(); // Obtém o ano
+
+  return `${day}${month}${year}`; // Concatena no formato ddmmaaaa
 }
 
 Date.prototype.addHours = function (value) {
@@ -172,9 +185,6 @@ app.post('/download671', async (req, res) => {
                     const batida = horarios[contador];
                     const nNsr = fillNum(nsr); // NSR do bilhete
                     
-                    // Portaria 373
-                    // fs.appendFileSync('Afd-GeneretorAFD.txt', `\n${nNsr}${tipo}${nDia}${nMes}${yearSet}${batida}${pis}`);
-
                     // Poratira 671
                     let registro = `${nNsr}${tipo}${yearSet}-${nMes}-${nDia}T${batida}:00-0300${cpf}`;
                     let crcCalculado = calcularCRC16Modbus(registro);
@@ -235,9 +245,9 @@ app.post('/download1510', async (req, res) => {
     let reqRazaoSocial = req.body.razaoSocial;
 
     try {
-        var razaosocial = formatarRazaoSocial(reqRazaoSocial);
+      var razaosocial = formatarRazaoSocial(reqRazaoSocial);
     } catch (error) {
-        console.error(error.message);
+      console.error(error.message);
     }
 
     let entrada1 = req.body.entrada1.replace(/:/g, '');
@@ -246,15 +256,19 @@ app.post('/download1510', async (req, res) => {
     let saida2 = req.body.saida2.replace(/:/g, '');
     let recieveEvent = req.body.event;
     const event = timeZoneAjust(recieveEvent);
-    const finaleventCabecalho = req.body.finalevent;
+    const timeEvent = formatDate(event);
     const recieveFinalEvent = new Date(req.body.finalevent)
+    const finaleventCabecalho = formatDate(recieveFinalEvent);
     const finalevent = recieveFinalEvent.setDate(recieveFinalEvent.getDate() + 1);
     const yearSet = event.getFullYear();
 
     let horarios = [entrada1, saida1 ,entrada2, saida2];
-    const hoje = timeZoneAjust().toISOString();
+    const hojeTz = timeZoneAjust();
+    const hoje = formatDate(hojeTz);
 
-    const cabecalho = `0000000001${tipoDeIdentificador}${cnpjOuCpf}              ${razaosocial}99999999999999999${recieveEvent}${finaleventCabecalho}${hoje}003146100098000150                                  `;
+    
+    // TODO ajustar cabeçalho
+    const cabecalho = `0000000001${tipoDeIdentificador}${cnpjOuCpf}            ${razaosocial}99999999999999999${timeEvent}${finaleventCabecalho}${hoje}`;
 
     fs.writeFileSync('Afd-GeneretorAFD.txt', cabecalho);
     console.log('arquivo criado');
