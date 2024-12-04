@@ -1,4 +1,6 @@
 const helperService = require("../helpers");
+const stream = require('stream');
+const readline = require('readline');
 
 // Função para verificar o dígito 10 e chamar outra função se necessário
 async function processFile(buffer, lineCallback, specificCallback) {

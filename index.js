@@ -3,9 +3,6 @@ const fs = require('fs');
 require("dotenv").config()
 const { MongoMissingCredentialsError } = require("mongodb");
 const ObjectId = require('mongoose').Types.ObjectId;
-const multer = require('multer');
-const readline = require('readline');
-const stream = require('stream');
 const cors = require('cors');
 const afdRoutes = require('./routes/afdRoutes')
 const crc16Route = require("./routes/crc16Route")
