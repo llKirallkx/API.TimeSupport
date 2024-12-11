@@ -3,7 +3,7 @@
         "node": "18"
     },
     "scripts": {
-        "start": "node index.js",
+        "start": "nodemon index.js",
         "startProd": "npm i && node index.js"
     },
     "dependencies": {
@@ -16,6 +16,7 @@
         "mongodb": "^6.6.1",
         "mongoose": "^8.3.4",
         "multer": "^1.4.5-lts.1",
+        "nodemon": "^3.1.7",
         "strip-ansi": "^5.0.0"
     }
 }

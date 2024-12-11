@@ -7,6 +7,7 @@ const cors = require('cors');
 const afdRoutes = require('./routes/afdRoutes')
 const crc16Route = require("./routes/crc16Route")
 const wokeupRoute = require("./routes/wokeupRoute")
+const afdCheckRoute = require("./routes/afdCheckRoute")
 
 //#endregion
 
@@ -34,5 +35,6 @@ require("./database/connection");
 app.use(afdRoutes);
 app.use(crc16Route);
 app.use(wokeupRoute);
+app.use(afdCheckRoute);
 
 //#endregion
