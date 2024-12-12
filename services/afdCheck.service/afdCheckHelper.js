@@ -25,7 +25,10 @@ const tipos = {
 };
 
 function invalidLine(line) {
-    if (line.length < 10) {
+    const regex = /[!@#$%¨&*(){}?/\\"]/;
+    const hasInvalidCaracteres = line.match(regex);
+
+    if (line.length < 10 || hasInvalidCaracteres) {
         return true;
     }
 
@@ -34,6 +37,11 @@ function invalidLine(line) {
 
 async function getCabecalho(rl) {
     for await (const line of rl) {
+
+        if (invalidLine(line)) {
+            continue;
+        }
+
         if (line[9] === '1') {
             return line;
         }
@@ -45,5 +53,22 @@ function isNullorEmpty(string) {
     return string === '' || !string ? true : false
 }
 
+function parseDateTime(input) {
+    try {
+      const sanitizedInput = input.replace(/([-+]\d{2}):?(\d{2})$/, "$1$2");
+     
+      // Tenta criar o objeto Date
+      const dateTime = new Date(sanitizedInput);
+      
+      // Valida se o objeto Date é válido
+      if (isNaN(dateTime.getTime())) {
+        throw new Error("Formato de data/hora inválido.");
+      }
+      
+      return dateTime;
+    } catch (error) {
+      return { error: error.message };
+    }
+  }
 
-module.exports = { getTypeAfd, invalidLine, getVersion, getCabecalho, isNullorEmpty }
+module.exports = { getTypeAfd, invalidLine, getVersion, getCabecalho, isNullorEmpty, parseDateTime }
