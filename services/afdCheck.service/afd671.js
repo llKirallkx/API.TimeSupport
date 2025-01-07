@@ -23,11 +23,11 @@ async function processLine671(buffer) {
     let lastNsr = "start";
     let intRegistros = 0;
     let repp = false;
-    let hasCrc16 = cabecalho.hasCrc16;
-
+    
     const rlForHeader = createReadline();
     const cabecalhoLine = await checkHelper.getCabecalho(rlForHeader);
     cabecalho = checkHelper.isNullorEmpty(cabecalhoLine) ? null : cabecalhoFunction(cabecalhoLine);
+    let hasCrc16 = cabecalho == null ? false : cabecalho.hasCrc16;
 
     if (!cabecalho) {
         erros.push("Cabeçalho não encontrado no arquivo.");
@@ -45,9 +45,9 @@ async function processLine671(buffer) {
             continue;
         };
 
-        // verificar se a sequencia do NSR está correta
-        if (lastNsr !== 'start' && parseInt(currentNsr) !== parseInt(lastNsr) + 1){
-            erros.push(`Linha ${lineNumber} possui NSR incompatível com anterior`)
+        let nsrCheckResult = nsrCheck(line, lastNsr, currentNsr, lineNumber);
+        if (nsrCheckResult.hasError){
+            erros.push(nsrCheckResult.erroNsrs)
         }
 
         if (line[9] === '3') {
@@ -73,7 +73,7 @@ async function processLine671(buffer) {
 }
 
 
-function cabecalhoFunction(line, lineNumber) {
+function cabecalhoFunction(line) {
     
     let erros = [];
     const razaoSocial = line.substring(39, 189).trim()
@@ -97,6 +97,29 @@ function cabecalhoFunction(line, lineNumber) {
 
 
     return { erros, razaoSocial, identificationType, nREP, initialDate, finalDate, generationdateTime, modelREP, hasCrc16, crc16 }
+}
+
+function nsrCheck(line, lastNsr, currentNsr, lineNumber) {
+    let erroNsrs = null;
+    let hasError = false;
+    
+    if (lastNsr === 'start')
+        return {hasError, erroNsrs}
+
+    if(line[9] === '9' || line[9] === '0')
+        return {hasError, erroNsrs}
+        
+    if(parseInt(currentNsr) === parseInt(lastNsr) + 1)
+        return {hasError, erroNsrs}
+
+    if(parseInt(currentNsr) !== parseInt(lastNsr) + 1){
+        erroNsrs = `Linha ${lineNumber} possui NSR incompatível com anterior`
+        hasError = true
+        return {hasError, erroNsrs}
+    }
+
+
+    return {hasError, erroNsrs}
 }
 
 function registroCFunction(line, lineNumber, hasCrc16) {
