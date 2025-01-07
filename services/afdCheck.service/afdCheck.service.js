@@ -23,15 +23,10 @@ async function processFile(buffer) {
     processed = await afd671.processLine671(buffer);
   }
 
-
-
-  // retornar json com resumos
   return processed;
 }
 
-// verificar tipo do afd 671 ou 1510
-// verificar cabeçalho se possui informações obrigatórias
-// resumo do AFD pelo cabeçalho
+
 // # CNPJ / CPF, razao social, numero de serie, data inicial e final dos registros, data de criação do arquivo.
 // verificar caracteres inválidos
 // verificar nas linhas de registro se possui crc16
