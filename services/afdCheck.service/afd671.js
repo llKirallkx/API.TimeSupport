@@ -1,7 +1,6 @@
 const stream = require('stream');
 const readline = require('readline');
 const checkHelper = require("./afdCheckHelper");
-const { error } = require('console');
 
 async function processLine671(buffer) {
 
@@ -81,7 +80,7 @@ function cabecalhoFunction(line) {
     const nREP = line.substring(189, 206)
     const initialDate = line.substring(206, 216)
     const finalDate = line.substring(216, 226)
-    const generationdateTime = line.substring(226, 249)
+    const generationDateTime = line.substring(226, 249)
     const modelREP = line.substring(268, 298).trim()
     const crc16 = line.substring(298)
     const hasCrc16 = !checkHelper.isNullorEmpty(crc16);
@@ -96,7 +95,7 @@ function cabecalhoFunction(line) {
         erros.push("Cabeçalho não possui CRC-16")
 
 
-    return { erros, razaoSocial, identificationType, nREP, initialDate, finalDate, generationdateTime, modelREP, hasCrc16, crc16 }
+    return { erros, razaoSocial, identificationType, nREP, initialDate, finalDate, generationDateTime, modelREP, hasCrc16, crc16 }
 }
 
 function nsrCheck(line, lastNsr, currentNsr, lineNumber) {

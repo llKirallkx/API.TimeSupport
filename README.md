@@ -34,3 +34,10 @@ ConnectionString
 # Referências
 
 [Portaria 671/21 MTP](https://in.gov.br/en/web/dou/-/portaria-359094139)
+
+
+# TODOs
+
+## AFD Check
+
+resumo das linhas processadas por tipo (Alteração de empresa, marcação de ponto, alteração de data e hora, alteraçao e incluão de funcionários, exclusão de funcionários)

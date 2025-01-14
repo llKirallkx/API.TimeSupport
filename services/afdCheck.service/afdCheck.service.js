@@ -27,13 +27,4 @@ async function processFile(buffer) {
 }
 
 
-// # CNPJ / CPF, razao social, numero de serie, data inicial e final dos registros, data de criação do arquivo.
-// verificar caracteres inválidos
-// verificar nas linhas de registro se possui crc16
-// verificar pelo tipo de registro se a linha possui o tamanho adequado
-// verificar se a sequencia do NSR está correta
-// verificar inconsistência nas datas
-// resumo das linhas processadas por tipo (Alteração de empresa, marcação de ponto, alteração de data e hora, alteraçao e incluão de funcionários, exclusão de funcionários)
-
-
 module.exports = { processFile }
